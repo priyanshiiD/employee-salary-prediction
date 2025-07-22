@@ -168,16 +168,10 @@ Each model is evaluated using:
 
 ## 🚀 Deployment
 
-### Build for Production
-```bash
+# Build React frontend
 npm run build
-```
 
-### Deploy to Netlify/Vercel
-- **Frontend**: Deploy to Netlify, Vercel, or GitHub Pages
-- **Backend**: Deploy to Heroku, Railway, or any Python hosting service
-
-**Note**: Update the `API_BASE_URL` in `src/services/api.ts` to point to your deployed backend.
+# Netlify handles frontend + backend integration (via proxy/API routing)
 
 ## 🤝 Contributing
 
