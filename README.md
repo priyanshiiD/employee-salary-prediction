@@ -2,7 +2,7 @@
 
 A comprehensive machine learning application that predicts employee salaries using multiple ML algorithms, built with React, TypeScript, and TensorFlow.js.
 
-![Project Preview](https://via.placeholder.com/800x400/10b981/ffffff?text=SalaryPredict+AI)
+[Live Demo](https://cheery-douhua-d8d335.netlify.app/)
 
 ## 🎯 Features
 
@@ -165,13 +165,3 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - Chart.js for beautiful data visualizations
 - Tailwind CSS for rapid UI development
 - Indian tech community for salary insights
-
-## 📞 Contact
-
-Your Name - [@yourusername](https://twitter.com/yourusername) - your.email@example.com
-
-Project Link: [https://github.com/yourusername/salary-prediction-ml](https://github.com/yourusername/salary-prediction-ml)
-
----
-
-⭐ **Star this repository if you found it helpful!**
