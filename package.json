@@ -12,6 +12,7 @@
   "dependencies": {
     "@tensorflow/tfjs": "^4.22.0",
     "@types/papaparse": "^5.3.16",
+    "axios": "^1.10.0",
     "chart.js": "^4.5.0",
     "lucide-react": "^0.344.0",
     "ml-matrix": "^6.12.1",
