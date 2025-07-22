@@ -1,16 +1,16 @@
 # 🚀 Employee Salary Prediction ML Project
 
-A comprehensive machine learning application that predicts employee salaries using multiple ML algorithms, built with React, TypeScript, and TensorFlow.js.
+A comprehensive machine learning application that predicts employee salaries using multiple Python ML algorithms, with a React TypeScript frontend and Python Flask backend.
 
 [Live Demo](https://cheery-douhua-d8d335.netlify.app/)
 
 ## 🎯 Features
 
 ### 🤖 Machine Learning Models
-- **Linear Regression** - Statistical baseline with gradient descent
-- **Polynomial Regression** - Captures non-linear relationships
-- **Neural Network** - Deep learning with TensorFlow.js (5-layer architecture)
-- **Random Forest** - Ensemble method with 15 decision trees
+- **Linear Regression** - scikit-learn LinearRegression
+- **Polynomial Regression** - scikit-learn Pipeline with PolynomialFeatures
+- **Neural Network** - scikit-learn MLPRegressor (128→64→32→16 architecture)
+- **Random Forest** - scikit-learn RandomForestRegressor with 15 estimators
 
 ### 📊 Data Analytics
 - **Interactive Visualizations** - Salary distributions, experience correlations
@@ -32,11 +32,12 @@ A comprehensive machine learning application that predicts employee salaries usi
 - **Tailwind CSS** - Utility-first styling
 - **Vite** - Fast build tool and dev server
 
-### Machine Learning
-- **TensorFlow.js** - Neural networks in the browser
-- **ML-Matrix** - Matrix operations
-- **ML-Regression** - Linear and polynomial regression
-- **Custom Algorithms** - Hand-built Random Forest implementation
+### Backend (Python)
+- **Flask** - Web framework for API
+- **scikit-learn** - Machine learning algorithms
+- **pandas** - Data manipulation and analysis
+- **numpy** - Numerical computing
+- **Flask-CORS** - Cross-origin resource sharing
 
 ### Data Visualization
 - **Chart.js** - Interactive charts
@@ -53,8 +54,8 @@ A comprehensive machine learning application that predicts employee salaries usi
 ## 🚀 Getting Started
 
 ### Prerequisites
-- Node.js 16+ 
-- npm or yarn
+- **Node.js 16+** and npm/yarn
+- **Python 3.8+** and pip
 
 ### Installation
 
@@ -64,18 +65,30 @@ git clone https://github.com/yourusername/salary-prediction-ml.git
 cd salary-prediction-ml
 ```
 
-2. **Install dependencies**
+2. **Setup Python Backend**
 ```bash
+cd backend
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+pip install -r requirements.txt
+python app.py
+```
+
+3. **Setup React Frontend** (in a new terminal)
+```bash
+cd ..  # Back to root directory
 npm install
 ```
 
-3. **Start development server**
+4. **Start development server**
 ```bash
 npm run dev
 ```
 
-4. **Open your browser**
+5. **Open your browser**
 Navigate to `http://localhost:5173`
+
+**Important**: Make sure both the Python backend (port 5000) and React frontend (port 5173) are running!
 
 ## 📱 How to Use
 
@@ -93,32 +106,40 @@ src/
 │   ├── DataVisualization.tsx
 │   ├── ModelTraining.tsx
 │   └── PredictionInterface.tsx
+├── services/           # API service for backend communication
+│   └── api.ts
 ├── data/               # Dataset and sample data
 │   └── sampleData.ts
 ├── types/              # TypeScript type definitions
 │   └── index.ts
-├── utils/              # Utility functions and ML models
+├── utils/              # Utility functions
 │   ├── dataProcessing.ts
-│   └── models.ts
-└── App.tsx            # Main application component
+│   └── models.ts       # (Legacy - now using Python backend)
+├── App.tsx            # Main application component
+└── backend/           # Python Flask backend
+    ├── app.py         # Main Flask application
+    ├── requirements.txt
+    └── README.md
 ```
 
 ## 🤖 ML Pipeline
 
 ### Data Preprocessing
-- Categorical encoding for education, job titles, locations
-- Feature normalization using Z-score standardization
-- Train/test split (80/20) with data shuffling
+- **pandas DataFrame** processing
+- **LabelEncoder** for categorical variables
+- **StandardScaler** for feature normalization
+- **train_test_split** (80/20) with random state
 
 ### Model Training
-- Real-time training with progress indicators
-- Cross-validation for model evaluation
-- Performance metrics calculation
+- **scikit-learn** model training
+- **Real-time API** communication
+- **Performance metrics** calculation
+- **Model persistence** with joblib
 
 ### Prediction
-- Best model selection based on R² score
-- Confidence intervals for predictions
-- Real-time salary estimation
+- **RESTful API** for predictions
+- **Best model selection** based on R² score
+- **Real-time salary estimation**
 
 ## 📊 Performance Metrics
 
@@ -131,11 +152,19 @@ Each model is evaluated using:
 
 ## 🌟 Key Highlights
 
-- **Browser-based ML** - No server required, runs entirely in browser
+- **Python ML Backend** - Professional scikit-learn implementation
+- **RESTful API** - Clean separation between frontend and ML logic
 - **Indian Context** - Realistic salary data for Indian tech industry
 - **Type-safe** - Full TypeScript implementation
 - **Responsive** - Works on desktop, tablet, and mobile
 - **Professional UI** - Production-ready design
+
+## 🔧 API Endpoints
+
+- `GET /api/data` - Get sample dataset
+- `POST /api/train` - Train all ML models
+- `POST /api/predict` - Predict salary for given input
+- `GET /api/models/status` - Get training status
 
 ## 🚀 Deployment
 
@@ -145,7 +174,10 @@ npm run build
 ```
 
 ### Deploy to Netlify/Vercel
-The project is optimized for static hosting platforms like Netlify, Vercel, or GitHub Pages.
+- **Frontend**: Deploy to Netlify, Vercel, or GitHub Pages
+- **Backend**: Deploy to Heroku, Railway, or any Python hosting service
+
+**Note**: Update the `API_BASE_URL` in `src/services/api.ts` to point to your deployed backend.
 
 ## 🤝 Contributing
 
@@ -161,7 +193,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🙏 Acknowledgments
 
-- TensorFlow.js team for browser-based ML capabilities
+- scikit-learn team for excellent ML library
+- Flask team for lightweight web framework
 - Chart.js for beautiful data visualizations
 - Tailwind CSS for rapid UI development
 - Indian tech community for salary insights
