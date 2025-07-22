@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { Play, CheckCircle, AlertCircle, Zap, Brain, BarChart3, Network, Clock, Target } from 'lucide-react';
 import { Employee, ModelResult } from '../types';
-import { preprocessData, normalizeFeatures, splitData } from '../utils/dataProcessing';
-import { LinearRegressionModel, PolynomialRegressionModel, NeuralNetworkModel, RandomForestModel } from '../utils/models';
+import { apiService } from '../services/api';
 
 interface ModelTrainingProps {
   data: Employee[];
@@ -23,53 +22,35 @@ export default function ModelTraining({ data, onModelsUpdate }: ModelTrainingPro
   const trainModels = async () => {
     setIsTraining(true);
     setTrainingProgress(0);
+    setCurrentModel('Initializing...');
 
     try {
-      // Preprocess data
-      const processedData = preprocessData(data);
-      const { normalized, means, stds } = normalizeFeatures(processedData);
-      const targets = processedData.map(d => d.salary);
+      setCurrentModel('Training Python ML Models...');
+      setTrainingProgress(25);
       
-      const { trainFeatures, trainTargets, testFeatures, testTargets } = 
-        splitData(normalized, targets, 0.2);
-
-      const modelInstances = [
-        new LinearRegressionModel(),
-        new PolynomialRegressionModel(2),
-        new NeuralNetworkModel(),
-        new RandomForestModel(10)
-      ];
-
-      const updatedModels: ModelResult[] = [];
-
-      for (let i = 0; i < modelInstances.length; i++) {
-        setCurrentModel(models[i].name);
-        setTrainingProgress((i / modelInstances.length) * 100);
-
-        try {
-          const metrics = await modelInstances[i].train(trainFeatures, trainTargets);
-          const predictions = modelInstances[i].predict(testFeatures);
-
-          updatedModels.push({
-            name: models[i].name,
-            metrics,
-            predictions,
-            trained: true,
-            trainingTime: metrics.trainingTime
-          });
-        } catch (error) {
-          console.error(`Error training ${models[i].name}:`, error);
-          updatedModels.push({
-            name: models[i].name,
-            metrics: { r2Score: 0, mae: 0, rmse: 0, mape: 0, accuracy: 0 },
-            predictions: [],
-            trained: false,
-            trainingTime: 0
-          });
-        }
-
-        // Small delay for UI feedback
-        await new Promise(resolve => setTimeout(resolve, 800));
+      // Call Python backend to train models
+      const trainedModels = await apiService.trainModels();
+      
+      // Convert API response to our format
+      const updatedModels: ModelResult[] = trainedModels.map(model => ({
+        name: model.name,
+        metrics: {
+          r2Score: model.metrics.r2Score,
+          mae: model.metrics.mae,
+          rmse: model.metrics.rmse,
+          mape: model.metrics.mape,
+          accuracy: model.metrics.accuracy
+        },
+        predictions: model.predictions,
+        trained: model.trained,
+        trainingTime: model.trainingTime
+      }));
+      
+      // Simulate progress updates
+      for (let i = 0; i < updatedModels.length; i++) {
+        setCurrentModel(updatedModels[i].name);
+        setTrainingProgress(25 + (i + 1) * (75 / updatedModels.length));
+        await new Promise(resolve => setTimeout(resolve, 500));
       }
 
       setTrainingProgress(100);
@@ -77,6 +58,7 @@ export default function ModelTraining({ data, onModelsUpdate }: ModelTrainingPro
       onModelsUpdate(updatedModels);
     } catch (error) {
       console.error('Training error:', error);
+      alert('Error training models. Make sure the Python backend is running on http://localhost:5000');
     } finally {
       setIsTraining(false);
       setCurrentModel('');
@@ -151,7 +133,7 @@ export default function ModelTraining({ data, onModelsUpdate }: ModelTrainingPro
           <div className="flex items-center mb-4">
             <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-indigo-600 mr-3"></div>
             <span className="text-lg font-semibold text-gray-700">
-              Training {currentModel}...
+              {currentModel}
             </span>
           </div>
           <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
@@ -162,7 +144,7 @@ export default function ModelTraining({ data, onModelsUpdate }: ModelTrainingPro
           </div>
           <div className="text-sm text-gray-600 mt-2 flex justify-between">
             <span>Progress: {Math.round(trainingProgress)}%</span>
-            <span>{Math.round(trainingProgress / 25)} of 4 models completed</span>
+            <span>Python ML Backend</span>
           </div>
         </div>
       )}

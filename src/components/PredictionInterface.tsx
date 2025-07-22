@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import { Calculator, TrendingUp, User, MapPin, Building, GraduationCap, Briefcase, Award } from 'lucide-react';
 import { PredictionInput, ModelResult } from '../types';
 import { educationLevels, jobTitles, locations, companySizes, allSkills } from '../data/sampleData';
-import { preprocessData, normalizeFeatures } from '../utils/dataProcessing';
-import { LinearRegressionModel } from '../utils/models';
+import { apiService } from '../services/api';
 
 interface PredictionInterfaceProps {
   models: ModelResult[];
@@ -37,115 +36,24 @@ export default function PredictionInterface({ models, sampleData }: PredictionIn
     setIsCalculating(true);
     
     try {
-      // Create a mock employee object for preprocessing
-      const mockEmployee = {
-        id: 0,
+      // Prepare prediction request
+      const predictionRequest = {
         yearsExperience: input.yearsExperience,
         educationLevel: input.educationLevel,
         jobTitle: input.jobTitle,
         location: input.location,
         companySize: input.companySize,
         skills: selectedSkills,
-        salary: 0, // This will be predicted
         industry: input.industry,
         workMode: input.workMode
       };
 
-      // Preprocess the input
-      const processedInput = preprocessData([mockEmployee])[0];
-      
-      // Normalize using the same parameters as training data
-      const processedSampleData = preprocessData(sampleData);
-      const { means, stds } = normalizeFeatures(processedSampleData);
-      
-      const normalizedInput = [
-        stds[0] === 0 ? 0 : (processedInput.yearsExperience - means[0]) / stds[0],
-        stds[1] === 0 ? 0 : (processedInput.educationLevel - means[1]) / stds[1],
-        stds[2] === 0 ? 0 : (processedInput.jobTitle - means[2]) / stds[2],
-        stds[3] === 0 ? 0 : (processedInput.location - means[3]) / stds[3],
-        stds[4] === 0 ? 0 : (processedInput.companySize - means[4]) / stds[4],
-        stds[5] === 0 ? 0 : (processedInput.skillsCount - means[5]) / stds[5],
-        stds[6] === 0 ? 0 : (processedInput.industry - means[6]) / stds[6],
-        stds[7] === 0 ? 0 : (processedInput.workMode - means[7]) / stds[7]
-      ];
-
-      // Simple prediction based on the best model's pattern
-      // This is a simplified version - in a real app, you'd use the actual trained model
-      let predictedSalary = 50000; // Base salary
-      
-      // Experience factor
-      predictedSalary += input.yearsExperience * 8000;
-      
-      // Education factor
-      const educationMultiplier = {
-        "High School": 1.0,
-        "Bachelor's": 1.2,
-        "Master's": 1.4,
-        "PhD": 1.6,
-        "MBA": 1.5
-      };
-      predictedSalary *= educationMultiplier[input.educationLevel as keyof typeof educationMultiplier] || 1.0;
-      
-      // Location factor
-      const locationMultiplier = {
-        "San Francisco": 1.4,
-        "New York": 1.3,
-        "Seattle": 1.25,
-        "Boston": 1.2,
-        "Los Angeles": 1.15,
-        "Chicago": 1.1,
-        "Austin": 1.05,
-        "Denver": 1.0,
-        "Miami": 0.95,
-        "Bangalore": 0.3,
-        "Mumbai": 0.32,
-        "Delhi": 0.31,
-        "Hyderabad": 0.29,
-        "Chennai": 0.28,
-        "Pune": 0.27,
-        "Kolkata": 0.25,
-        "Gurgaon": 0.31,
-        "Noida": 0.30
-      };
-      predictedSalary *= locationMultiplier[input.location as keyof typeof locationMultiplier] || 1.0;
-      
-      // Company size factor
-      const companySizeMultiplier = {
-        "Small": 0.9,
-        "Medium": 1.0,
-        "Large": 1.2
-      };
-      predictedSalary *= companySizeMultiplier[input.companySize as keyof typeof companySizeMultiplier] || 1.0;
-      
-      // Job title factor
-      const jobTitleMultiplier: Record<string, number> = {
-        "Junior Software Engineer": 0.8,
-        "Software Engineer": 1.0,
-        "Senior Software Engineer": 1.3,
-        "Engineering Manager": 1.6,
-        "Principal Engineer": 1.8,
-        "Data Scientist": 1.1,
-        "Senior Data Scientist": 1.4,
-        "Machine Learning Engineer": 1.2,
-        "Product Manager": 1.2,
-        "Senior Product Manager": 1.5,
-        "DevOps Engineer": 1.0,
-        "Senior DevOps Engineer": 1.3
-      };
-      predictedSalary *= jobTitleMultiplier[input.jobTitle] || 1.0;
-      
-      // Skills factor
-      predictedSalary += selectedSkills.length * 2000;
-      
-      // Add some randomness based on model accuracy
-      const accuracy = bestModel.metrics.r2Score;
-      const variance = (1 - accuracy) * 0.2;
-      const randomFactor = 1 + (Math.random() - 0.5) * variance;
-      predictedSalary *= randomFactor;
-      
-      setPrediction(Math.round(predictedSalary));
+      // Call Python backend for prediction
+      const response = await apiService.predictSalary(predictionRequest);
+      setPrediction(Math.round(response.prediction));
     } catch (error) {
       console.error('Prediction error:', error);
+      alert('Error making prediction. Make sure the Python backend is running and models are trained.');
     } finally {
       setIsCalculating(false);
     }
@@ -340,7 +248,7 @@ export default function PredictionInterface({ models, sampleData }: PredictionIn
               </div>
 
               <div className="text-sm text-gray-600">
-                Prediction made using: <span className="font-semibold">{bestModel.name}</span>
+                Prediction made using: <span className="font-semibold">Python {bestModel.name}</span>
               </div>
             </div>
           ) : (
@@ -359,8 +267,8 @@ export default function PredictionInterface({ models, sampleData }: PredictionIn
             {bestModel?.trained ? (
               <div className="space-y-3">
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Best Model:</span>
-                  <span className="font-semibold">{bestModel.name}</span>
+                  <span className="text-gray-600">Python Backend:</span>
+                  <span className="font-semibold">scikit-learn</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600">R² Score:</span>
@@ -378,7 +286,7 @@ export default function PredictionInterface({ models, sampleData }: PredictionIn
             ) : (
               <div className="text-center text-gray-500">
                 <p>No trained models available.</p>
-                <p className="text-sm mt-1">Please train models first.</p>
+                <p className="text-sm mt-1">Start Python backend and train models first.</p>
               </div>
             )}
           </div>
