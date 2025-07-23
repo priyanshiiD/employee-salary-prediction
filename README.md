@@ -82,7 +82,7 @@ npm install
 
 4. **Start development server**
 ```bash
-npm run dev
+npm run dev:full
 ```
 
 5. **Open your browser**
