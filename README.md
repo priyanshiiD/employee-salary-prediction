@@ -12,7 +12,7 @@ This is a simple machine learning project that predicts an employee's salary bas
 
 1. **Clone the repository**
 
-```bash
+bash
 git clone https://github.com/your-username/employee-salary-predictor.git
 cd employee-salary-predictor
 
