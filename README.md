@@ -11,26 +11,29 @@ This is a simple machine learning project that predicts an employee's salary bas
 ## ⚙️ Setup
 
 1. **Clone the repository**
-
+```
 bash
 git clone https://github.com/your-username/employee-salary-predictor.git
 cd employee-salary-predictor
+```
 
 2. **Install dependencies**
-
+```
 bash
 Copy
 Edit
 pip install -r requirements.txt
+```
 
 3. **Run the Notebook**
 
 Open the notebook in Jupyter or VS Code:
-
+```
 bash
 Copy
 Edit
 jupyter notebook employee_salary_predictor.ipynb
+```
 
 ## 📊 Model Evaluation
 Mean Absolute Error (MAE)
