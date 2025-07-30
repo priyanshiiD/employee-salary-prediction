@@ -16,7 +16,7 @@ The dataset used contains employee details like:
 - Industry
 - Current Salary (target)
 
-> 📌 **Note:** Dataset file is included in the repository as `employee_salary_data.csv`.
+> 📌 **Note:** Dataset file is included in the repository as `adult 3.csv`.
 
 ---
 
@@ -82,14 +82,14 @@ Gradient Boosting | **0.8571**
 ---
 
 ## 📁 Project Structure
-
+```
 employee-salary-prediction/
 │
-├── adult3.csv # Dataset
+├── adult 3.csv # Dataset
 ├── employee salary prediction.ipynb # Main notebook
 ├── README.md # Project documentation
 └── requirements.txt # Python dependencies
-
+```
 ---
 
 ## 📌 Future Improvements
