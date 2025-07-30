@@ -15,13 +15,15 @@ This is a simple machine learning project that predicts an employee's salary bas
 ```bash
 git clone https://github.com/your-username/employee-salary-predictor.git
 cd employee-salary-predictor
-Install dependencies
+
+2. **Install dependencies**
 
 bash
 Copy
 Edit
 pip install -r requirements.txt
-Run the Notebook
+
+3. **Run the Notebook**
 
 Open the notebook in Jupyter or VS Code:
 
@@ -29,14 +31,15 @@ bash
 Copy
 Edit
 jupyter notebook employee_salary_predictor.ipynb
-📊 Model Evaluation
+
+## 📊 Model Evaluation
 Mean Absolute Error (MAE)
 
 Mean Squared Error (MSE)
 
 R² Score
 
-🧩 Tools Used
+## 🧩 Tools Used
 Python
 
 Pandas, NumPy
@@ -45,6 +48,6 @@ scikit-learn
 
 joblib or pickle
 
-👩‍💻 Author
+##👩‍💻 Author
 Priyanshi Dawar
 GitHub: https://github.com/priyanshiiD
